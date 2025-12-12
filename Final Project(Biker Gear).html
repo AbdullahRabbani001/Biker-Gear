@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>BikerGear</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="icon" type="image/png" href="logo.png">
+
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0; padding: 0; background: #f4f4f4; }
+    
+    .content { padding: 20px; }
+    .category-title { font-size: 22px; margin-top: 30px; color: #333; }
+    .products { display: flex; flex-wrap: wrap; gap: 20px; margin-top: 15px; }
+    .product-card {
+      background: white; border-radius: 10px; padding: 10px; width: 200px; box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+    .product-card img { width: 100%; border-radius: 8px; }
+    .product-card button {
+      background: #111; color: white; padding: 8px 16px; margin-top: 10px;
+      border: none; border-radius: 4px; cursor: pointer; font-weight: bold;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2); transition: background 0.3s;
+    }
+    .product-card button:hover { background: #333; }
+
+    #customModal {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.7); display: flex; justify-content: center; align-items: center;
+      z-index: 9999;
+    }
+    #customModal > div {
+      background: white; padding: 20px; border-radius: 10px;
+      width: 90%; max-width: 600px; max-height: 90%; overflow-y: auto; position: relative;
+    }
+    .close-btn {
+      position: absolute; top: 15px; right: 20px; font-size: 24px; font-weight: bold; cursor: pointer;
+    }
+    .modal-section { margin-bottom: 20px; }
+    .modal-section label { display: block; margin-bottom: 5px; font-weight: bold; }
+    .modal-section select { width: 100%; padding: 8px; border-radius: 4px; border: 1px solid #ccc; }
+    .submit-btn {
+      width: 100%; padding: 12px; background: linear-gradient(45deg, #111, #444);
+      color: white; font-weight: bold; border: none; border-radius: 6px; cursor: pointer;
+      font-size: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.3); transition: opacity 0.3s;
+    }
+    .submit-btn:hover { opacity: 0.9; }
+    table { width: 100%; border-collapse: collapse; margin-bottom: 15px; }
+    table, th, td { border: 1px solid #ddd; }
+    th, td { padding: 8px; text-align: center; }
+    th { background: #f0f0f0; }
+ 
+  
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #222;
+  padding: 10px 20px;
+  color: white;
+}
+
+.logo {
+  font-size: 22px;
+  font-weight: bold;
+}
+
+.nav-links button,
+.nav-right button {
+  background: none;
+  border: none;
+  color: white;
+  margin: 0 8px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.nav-right {
+  display: flex;
+  align-items: center;
+}
+
+.cart-btn {
+  position: relative;
+}
+
+.cart-badge {
+  background: red;
+  color: #fff;
+  border-radius: 50%;
+  padding: 2px 6px;
+  font-size: 12px;
+  position: absolute;
+  top: -8px;
+  right: -12px;
+}
+
+ .hero-carousel { position: relative; width: 100%; height: 100vh; overflow: hidden; }
+    .hero-slide { position: absolute; width: 100%; height: 100%; opacity: 0; transition: 0.8s; cursor: pointer; }
+    .hero-slide img { width: 100%; height: 100%; object-fit: cover; }
+    .hero-slide.active { opacity: 1; }
+    .hero-btn { position: absolute; top: 50%; transform: translateY(-50%); font-size: 2rem; background: rgba(0,0,0,0.5); color: #fff; border: none; padding: 10px; cursor: pointer; }
+    .prev { left: 20px; } .next { right: 20px; }
+    .carousel-overlay { position: absolute; top: 30%; left: 10%; color: #fff; }
+    .carousel-overlay h1 { font-size: 4rem; font-weight: bold; }
+    .carousel-overlay p { font-size: 1.5rem; }
+
+ #how-it-works div[style*="flex:"] {
+  cursor: pointer;
+}
+#how-it-works div[style*="flex:"]:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+}
+
+.header {
+      background: #111;
+      color: #fff;
+      padding: 25px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 1001;
+    
+    }
+ .site-logo {
+  height: 95px;   /* bigger logo */
+  width: auto;
+  font-size: 28px;
+  font-weight: bold;
+}
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #000; /* black background */
+  padding: 15px 40px;
+}
+
+.site-logo {
+  height: 70px;   /* bigger logo */
+  width: auto;
+}
+
+.nav-links {
+  list-style: none;
+  display: flex;
+  gap: 25px;
+}
+
+.nav-links li a {
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  text-decoration: none;
+  transition: 0.3s;
+}
+
+.nav-links li a:hover {
+  color: #FF4500; /* attractive orange-red hover */
+}
+
+
+  </style>
+</head>
+<body>
+
+<div class="header">
+   <div class="logo">
+    <a href="Final Project(Biker Gear).html">
+      <img src="logo.png" alt="MotoArmor Logo" class="site-logo">
+    </a>
+  </div>
+ 
+  <div class="nav-links">
+    <button onclick="showSection('helmet')">Helmets</button>
+    <button onclick="showSection('jacket')">Jackets</button>
+    <button onclick="showSection('gloves')">Gloves</button>
+    <button onclick="showSection('pants')">Pants</button>
+    <button onclick="showSection('boots')">Boots</button>
+  </div>
+
+
+     <!-- ✅ Right side Cart Icon -->
+    <div class="nav-right">
+    <button onclick="showAbout()">About</button>
+    <button onclick="showContact()">Contact</button>
+    <button onclick="goToCart()" class="cart-btn">
+      🛒 <span> View Cart</span>
+      
+    </button>
+  </div>
+</div>
+
+
+
+  <div class="content" id="mainContent">
+ 
+  </div>
+
+<!-- ✅ HERO SECTION -->
+<section id="heroSection" style="position: relative; margin: 0; padding: 0; overflow: hidden;">
+
+  <div class="hero-carousel" style="position: relative; height: 100vh;">
+
+    <!-- Slides -->
+    <div class="hero-slide active"onclick="openProduct('helmet')">
+      
+      <img src="https://images.pexels.com/photos/163210/motorcycles-race-helmets-pilots-163210.jpeg" alt="Helmet" style="width: 100%; height: 100vh; object-fit: cover;">
+      
+    </div>
+
+    <div class="hero-slide" onclick="window.location.href=''">
+      <img src="https://img.freepik.com/free-photo/handsome-man-biker-travelling-mototrcycle_1303-22146.jpg?ga=GA1.1.1487364949.1749822458&semt=ais_hybrid&w=740" alt="Jacket" style="width: 100%; height: 100vh; object-fit: cover;">
+    </div>
+
+    <div class="hero-slide" onclick="window.location.href=''">
+      <img src="https://img.freepik.com/free-photo/motorcycle-driver-wears-leather-gloves_346278-27.jpg?ga=GA1.1.1487364949.1749822458&semt=ais_hybrid&w=740" alt="Gloves" style="width: 100%; height: 100vh; object-fit: cover;">
+    </div>
+
+    <div class="hero-slide" onclick="window.location.href=''">
+      <img src="https://img.freepik.com/free-photo/young-handsome-man-posing-near-his-motorbike-countryside-road_176420-2469.jpg?ga=GA1.1.1487364949.1749822458&semt=ais_hybrid&w=740" alt="Boots" style="width: 100%; height: 100vh; object-fit: cover;">
+    </div>
+
+    <div class="hero-slide" onclick="window.location.href=''">
+      <img src="https://img.freepik.com/free-photo/brutal-man-with-bike_1303-21917.jpg?ga=GA1.1.1487364949.1749822458&semt=ais_hybrid&w=740" alt="Pants" style="width: 100%; height: 100vh; object-fit: cover;">
+    </div>
+
+    <!-- ✅ Centered Overlay -->
+    <div class="carousel-overlay" style="
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      color: #fff;
+      background: rgba(0,0,0,0.4);
+      padding: 30px 50px;
+      border-radius: 10px;
+    ">
+      <h1 style="font-size: 48px; margin-bottom: 10px;">Design Your Ride Gear</h1>
+      <p style="font-size: 20px; margin: 0;">CUSTOMIZE YOUR STYLE YOUR WAY</p>
+    </div>
+
+    <!-- ✅ Navigation Buttons -->
+    <button class="hero-btn prev" onclick="plusSlides(-1)" style="
+      position: absolute;
+      top: 50%;
+      left: 20px;
+      transform: translateY(-50%);
+      font-size: 40px;
+      background: rgba(0,0,0,0.5);
+      border: none;
+      color: #fff;
+      cursor: pointer;
+      border-radius: 50%;
+      padding: 10px;
+    ">&#10094;</button>
+
+    <button class="hero-btn next" onclick="plusSlides(1)" style="
+      position: absolute;
+      top: 50%;
+      right: 20px;
+      transform: translateY(-50%);
+      font-size: 40px;
+      background: rgba(0,0,0,0.5);
+      border: none;
+      color: #fff;
+      cursor: pointer;
+      border-radius: 50%;
+      padding: 10px;
+    ">&#10095;</button>
+
+  </div>
+
+</section>
+
+
+  <script>
+    let slideIndex = 0;
+    showHeroSlide(slideIndex);
+
+    function plusSlides(n) {
+      showHeroSlide(slideIndex += n);
+    }
+
+    function showHeroSlide(n) {
+      let slides = document.getElementsByClassName("hero-slide");
+      if (n >= slides.length) { slideIndex = 0; }
+      if (n < 0) { slideIndex = slides.length - 1; }
+      for (let i = 0; i < slides.length; i++) {
+        slides[i].classList.remove("active");
+      }
+      slides[slideIndex].classList.add("active");
+    }
+  </script>
+
+  <script>
+    const gearData = {
+      helmet: {
+        "Helmets Collection": [
+          { src: "https://ts2.mm.bing.net/th?id=OIP.VVG-bAx-W5StxpbtK-ZNIAHaHa&pid=15.1", name: "Full Helmet 1", price: "Rs. 3500" },
+          { src: "https://th.bing.com/th/id/OIP.GXf5IBNh5_5-KCwudVwGewHaHa?w=205&h=204&c=7&r=0&o=5&pid=1.7", name: "Full Helmet 2", price: "Rs. 3700" },
+          { src: "https://th.bing.com/th/id/OIP.4ceHacADV6EXTJGpR-EMpQHaHa?w=190&h=190&c=7&r=0&o=5&pid=1.7", name: "Full Helmet 3", price: "Rs. 3900" }
+          
+        ]
+        
+      },
+      jacket: {
+        "Jackets Collection": [
+          { src: "https://ts4.mm.bing.net/th?id=OIP.TtyxuVo-jrdKq2Fn5JNgEwHaIL&pid=15.1", name: "Racing Jacket 1", price: "Rs. 6500" },
+          { src: "https://ts1.mm.bing.net/th?id=OIP.CSf0AOCEDKxiztIhz0R3GQHaHa&pid=15.1", name: "Racing Jacket 2", price: "Rs. 6800" },
+          { src: "https://ts2.mm.bing.net/th?id=OIP.OBybwvDhnj_BsrFDtBruEgHaIW&pid=15.1", name: "Racing Jacket 3", price: "Rs. 7000" }
+        ]
+      },
+      gloves: {
+        "Gloves Collection": [
+          { src: "https://th.bing.com/th/id/OIP.fwuZEeKbXvYXW1qzJBT-cgHaIJ?w=162&h=180&c=7&r=0&o=7&pid=1.7&rm=3", name: "Racing Gloves 1", price: "Rs. 1500" },
+          { src: "https://th.bing.com/th/id/OIP.O55VQX7-RgRbc-Z0wUgofwHaHa?w=178&h=180&c=7&r=0&o=7&pid=1.7&rm=3", name: "Racing Gloves 2", price: "Rs. 1700" },
+          { src: "https://th.bing.com/th/id/OIP.s82k6sxoyBBRB9PRnVI6qwHaHa?w=172&h=180&c=7&r=0&o=7&pid=1.7&rm=3", name: "Racing Gloves 3", price: "Rs. 1900" }
+        ]
+      },
+      pants: {
+        "Pants Collection": [
+          { src: "https://th.bing.com/th/id/OIP.W6UjIpXQtJtLrptZOt8T2AHaI4?w=184&h=220&c=7&r=0&o=5&pid=1.7", name: "Riding Pants 1", price: "Rs. 4000" },
+          { src: "https://th.bing.com/th/id/OIP.MDhzQaQBdMbAyV3VuYZmpAHaHa?w=195&h=194&c=7&r=0&o=7&pid=1.7&rm=3", name: "Riding Pants 2", price: "Rs. 4200" },
+          { src: "https://th.bing.com/th/id/OIP.RXQ3OyUnVJoBbTaVrypepAHaHa?w=191&h=191&c=7&r=0&o=7&pid=1.7&rm=3", name: "Riding Pants 3", price: "Rs. 4400" }
+        ]
+      },
+      boots: {
+        "Boots Collection": [
+          { src: "https://th.bing.com/th/id/OIP.IojluLlyF36TiIYK24ExVQHaH4?w=173&h=183&c=7&r=0&o=5&pid=1.7", name: "Touring Boots 1", price: "Rs. 4800" },
+          { src: "https://th.bing.com/th/id/OIP.ncH4Cxot8O_IuE7Ld7ev5QHaHa?w=204&h=204&c=7&r=0&o=5&pid=1.7", name: "Touring Boots 2", price: "Rs. 5000" },
+          { src: "https://th.bing.com/th/id/OIP.hyD0kGN1HeBwGzi4dSMrxQHaHa?w=163&h=180&c=7&r=0&o=7&pid=1.7&rm=3", name: "Touring Boots 3", price: "Rs. 5200" }
+        ]
+      }
+    };
+
+    let cartCount = 0;
+    function showSection(type) {
+      const content = document.getElementById('mainContent');
+      content.innerHTML = '';
+      const categories = gearData[type];
+      for (const cat in categories) {
+        const section = document.createElement('div');
+        section.innerHTML = `<h2 class="category-title">${cat}</h2>`;
+        const productRow = document.createElement('div');
+        productRow.className = "products";
+        categories[cat].forEach(item => {
+          const card = document.createElement('div');
+          card.className = "product-card";
+          card.innerHTML = `
+            <img src="${item.src}" alt="${item.name}">
+            <h4>${item.name}</h4><p>${item.price}</p>
+            <button onclick="openCustomization('${item.name}','${item.price}','${type}')">Customize</button>
+          `;
+          productRow.appendChild(card);
+        });
+        section.appendChild(productRow);
+        content.appendChild(section);
+      }
+    }
+
+    function openCustomization(name, price, type) {
+      const modal = document.createElement("div");
+      modal.id = "customModal";
+      modal.innerHTML = `
+        <div>
+          <span class="close-btn" onclick="modalClose()">&times;</span>
+          <h2>${name}</h2><p><strong>Price:</strong> ${price}</p><br>
+          <div class="modal-section">
+            <label>Select Color:</label>
+            <select id="colorSelect"><option>Black</option><option>Red</option><option>White</option><option>Grey</option></select>
+          </div>
+          <div class="modal-section">
+            <label>Select Size:</label>
+            <select id="sizeSelect"><option value="">--Select Size--</option></select>
+          </div>
+          <div class="modal-section size-chart">
+            <h3>Size Chart <button onclick="toggleChart()" style="float:right;font-size:14px;">Close</button></h3>
+            ${getChartHtml(type)}
+          </div>
+          <button class="submit-btn" onclick="confirmAdd('${name}', '${type}')">➕ Add to Bag</button>
+        </div>`;
+      document.body.appendChild(modal);
+      populateSizes(type);
+    }
+
+    function getChartHtml(type) {
+      const charts = {
+        helmet: `<table><tr><th>Size</th><th>Head (cm)</th></tr>
+                  <tr><td>S</td><td>55-56</td></tr><tr><td>M</td><td>57-58</td></tr>
+                  <tr><td>L</td><td>59-60</td></tr><tr><td>XL</td><td>61-62</td></tr></table>`,
+        jacket: `<table><tr><th>Size</th><th>Chest (in)</th><th>Waist (in)</th><th>Sleeve (in)</th></tr>
+                   <tr><td>S</td><td>36-38</td><td>30-32</td><td>32</td></tr>
+                   <tr><td>M</td><td>38-40</td><td>32-34</td><td>33</td></tr>
+                   <tr><td>L</td><td>40-42</td><td>34-36</td><td>34</td></tr>
+                   <tr><td>XL</td><td>42-44</td><td>36-38</td><td>35</td></tr></table>`,
+        gloves: `<table><tr><th>Size</th><th>Palm Width (in)</th><th>Length (in)</th></tr>
+                   <tr><td>S</td><td>7-8</td><td>8.5-9</td></tr>
+                   <tr><td>M</td><td>8-9</td><td>9-9.5</td></tr>
+                   <tr><td>L</td><td>9-10</td><td>9.5-10</td></tr>
+                   <tr><td>XL</td><td>10-11</td><td>10-10.5</td></tr></table>`,
+        pants: `<table><tr><th>Size</th><th>Waist (in)</th><th>Inseam (in)</th></tr>
+                  <tr><td>S</td><td>30-32</td><td>30</td></tr>
+                  <tr><td>M</td><td>32-34</td><td>32</td></tr>
+                  <tr><td>L</td><td>34-36</td><td>34</td></tr>
+                  <tr><td>XL</td><td>36-38</td><td>36</td></tr></table>`,
+        boots: `<table><tr><th>EU</th><th>US</th><th>Foot (cm)</th></tr>
+                   <tr><td>40</td><td>7</td><td>25.0</td></tr>
+                   <tr><td>41</td><td>8</td><td>26.0</td></tr>
+                   <tr><td>42</td><td>9</td><td>27.0</td></tr>
+                   <tr><td>43</td><td>10</td><td>28.0</td></tr></table>`
+      };
+      return charts[type] || "";
+    }
+
+    function populateSizes(type) {
+      const sel = document.getElementById('sizeSelect');
+      const sizes = { helmet: ["S","M","L","XL"], jacket: ["S","M","L","XL"],
+                      gloves: ["S","M","L","XL"], pants: ["S","M","L","XL"],
+                      boots: ["40","41","42","43"]};
+      sizes[type].forEach(s => {
+        const opt = document.createElement('option');
+        opt.value = s; opt.textContent = s;
+        sel.appendChild(opt);
+      });
+    }
+
+    function toggleChart() {
+      document.querySelector('.size-chart table').style.display =
+        document.querySelector('.size-chart table').style.display === 'none' ? 'table' : 'none';
+    }
+function confirmAdd(name, type) {
+      const size = document.getElementById('sizeSelect').value;
+      if (!size) return alert("Please select size.");
+      const color = document.getElementById('colorSelect').value;
+      cartCount++;
+      document.getElementById('cartCount').innerText = cartCount;
+      alert(`${name} (${type}, Size: ${size}, Color: ${color}) added!`);
+      modalClose();
+    }
+function modalClose() {
+      const m = document.getElementById('customModal');
+      if (m) document.body.removeChild(m);
+    }
+function modalClose() {
+      const m = document.getElementById('customModal');
+      if (m) document.body.removeChild(m);
+    }
+
+    
+  </script>
+
+<script>
+function showAbout() {
+  window.location.href = 'About.html';
+}
+
+function showContact() {
+  window.location.href = 'Final Project(Contact Page).html';
+}
+
+function goToCart() {
+  window.location.href = 'cart.html';
+}
+
+// Live cart count on page load
+
+document.addEventListener('DOMContentLoaded', () => {
+  const cart = JSON.parse(localStorage.getItem('cart')) || [];
+  document.getElementById('cartCount').innerText = cart.length;
+});
+
+</script>
+
+
+<!-- ✅ HOW IT WORKS SECTION -->
+<section id="how-it-works" style="background: linear-gradient(135deg, #0f0f10, #1b1b1d); color: #fff; padding: 80px 20px;">
+  <div class="container" style="max-width: 1200px; margin: auto; text-align: center;">
+    <h2 style="font-size: 42px; font-weight: 800; color: #ffc107; margin-bottom: 15px; letter-spacing: 1px;">
+      How It Works
+    </h2>
+    <p style="color: #ccc; font-size: 18px; margin-bottom: 60px;">
+      Get your perfect ride gear in just a few simple steps.
+    </p>
+
+    <div style="display: flex; gap: 30px; flex-wrap: wrap; justify-content: center;">
+      <!-- Step 1 -->
+      <div style="background: #222; padding: 40px 30px; border-radius: 12px; flex: 1 1 300px; max-width: 350px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); transition: transform 0.3s, box-shadow 0.3s;">
+        <div style="margin-bottom: 20px;">
+          <img src="https://cdn-icons-png.flaticon.com/512/3208/3208711.png" alt="Choose Product" width="60">
+        </div>
+        <h5 style="font-size: 22px; font-weight: 700; color: #ffc107; margin-bottom: 15px;">1. Choose Your Gear</h5>
+        <p style="color: #ccc;">Select from jackets, gloves, helmets, and more. Each product is customizable for a perfect fit.</p>
+      </div>
+
+      <!-- Step 2 -->
+      <div style="background: #222; padding: 40px 30px; border-radius: 12px; flex: 1 1 300px; max-width: 350px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); transition: transform 0.3s, box-shadow 0.3s;">
+        <div style="margin-bottom: 20px;">
+          <img src="https://cdn-icons-png.flaticon.com/512/942/942748.png" alt="Customize" width="60">
+        </div>
+        <h5 style="font-size: 22px; font-weight: 700; color: #ffc107; margin-bottom: 15px;">2. Customize & Add to Cart</h5>
+        <p style="color: #ccc;">Choose size, colors, and features. Click "Add to Cart" and review your order instantly.</p>
+      </div>
+
+      <!-- Step 3 -->
+      <div style="background: #222; padding: 40px 30px; border-radius: 12px; flex: 1 1 300px; max-width: 350px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); transition: transform 0.3s, box-shadow 0.3s;">
+        <div style="margin-bottom: 20px;">
+          <img src="https://cdn-icons-png.flaticon.com/512/1828/1828490.png" alt="Place Order" width="60">
+        </div>
+        <h5 style="font-size: 22px; font-weight: 700; color: #ffc107; margin-bottom: 15px;">3. Place Your Order</h5>
+        <p style="color: #ccc;">Submit your order directly through WhatsApp or email — fast, simple, and secure.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+ <!-- ✅ Biker Gear Collections Section ✅ -->
+<section style="text-align:center; padding:50px; background:#f7f7f7;">
+  <h2 style="font-size:40px; margin-bottom:40px;">Biker Gear Collections</h2>
+  <div style="display:flex; justify-content:center; flex-wrap:wrap; gap:40px;">
+
+    <!-- Helmet Card -->
+    <div style="width:250px; cursor:pointer;" onclick="location.href='helmet.html'">
+      <img src="https://images.pexels.com/photos/163210/motorcycles-race-helmets-pilots-163210.jpeg" style="width:100%; border-radius:8px;">
+      <h3>Helmet</h3>
+    </div>
+
+    <!-- Jacket Card -->
+    <div style="width:250px; cursor:pointer;" onclick="location.href='jacket.html'">
+      <img src="https://img.freepik.com/free-photo/handsome-man-biker-travelling-mototrcycle_1303-22146.jpg" style="width:100%; border-radius:8px;">
+      <h3>Jacket</h3>
+    </div>
+
+    <!-- Gloves Card -->
+    <div style="width:250px; cursor:pointer;" onclick="location.href='gloves.html'">
+      <img src="https://img.freepik.com/free-photo/motorcycle-driver-wears-leather-gloves_346278-27.jpg" style="width:100%; border-radius:8px;">
+      <h3>Gloves</h3>
+    </div>
+
+    <!-- Pants Card -->
+    <div style="width:250px; cursor:pointer;" onclick="location.href='pants.html'">
+      <img src="https://img.freepik.com/free-photo/brutal-man-with-bike_1303-21917.jpg" style="width:100%; border-radius:8px;">
+      <h3>Pants</h3>
+    </div>
+
+    <!-- Boots Card -->
+    <div style="width:250px; cursor:pointer;" onclick="location.href='boots.html'">
+      <img src="https://img.freepik.com/free-photo/young-handsome-man-posing-near-his-motorbike-countryside-road_176420-2469.jpg" style="width:100%; border-radius:8px;">
+      <h3>Boots</h3>
+    </div>
+
+  </div>
+</section>
+
+<!-- ✅ Biker Gear Footer -->
+<footer style="background: #121416; color: #ddd; padding: 60px 20px 30px;">
+  <div class="container" style="max-width: 1200px; margin: auto; display: flex; flex-wrap: wrap; gap: 50px; justify-content: space-between;">
+    <!-- Brand Info -->
+    <div style="flex: 1 1 250px;">
+      <h3 style="color: #ffc107; margin-bottom: 20px;">Moto Armor</h3>
+      <p style="line-height: 1.7;">
+        Moto Armor brings you top-quality motorcycle jackets, gloves, helmets, and accessories — fully customizable for the perfect ride.
+      </p>
+    </div>
+
+    <!-- Quick Links -->
+    <div style="flex: 1 1 200px;">
+      <h4 style="color: #ffc107; margin-bottom: 20px;">Quick Links</h4>
+      <ul style="list-style: none; padding: 0; margin: 0;">
+        <li><a href="Final Project(Biker Gear).html" style="color: #ddd; text-decoration: none; display: block; margin-bottom: 10px;">Home</a></li>
+        <li><a href="#" style="color: #ddd; text-decoration: none; display: block; margin-bottom: 10px;">Gear Collection</a></li>
+        <li><a href="About.html" style="color: #ddd; text-decoration: none; display: block; margin-bottom: 10px;">About</a></li>
+        <li><a href="Final Project(Contact Page).html" style="color: #ddd; text-decoration: none; display: block; margin-bottom: 10px;">Contact</a></li>
+      </ul>
+    </div>
+
+    <!-- Contact Info -->
+    <div style="flex: 1 1 200px;">
+      <h4 style="color: #ffc107; margin-bottom: 20px;">Contact Us</h4>
+      <p style="margin: 0 0 10px;">Email: info@motoarmor.com</p>
+      <p style="margin: 0 0 10px;">Phone: +1 234 567 890</p>
+      <p style="margin: 0;">Address: 123 Biker Street, Ride City</p>
+    </div>
+
+    <!-- Social Icons -->
+    <div style="flex: 1 1 200px;">
+      <h4 style="color: #ffc107; margin-bottom: 20px;">Follow Us</h4>
+      <div style="display: flex; gap: 15px;">
+        <a href="#" style="color: #ddd; font-size: 22px;"><i class="fab fa-facebook-f"></i></a>
+        <a href="#" style="color: #ddd; font-size: 22px;"><i class="fab fa-instagram"></i></a>
+        <a href="#" style="color: #ddd; font-size: 22px;"><i class="fab fa-twitter"></i></a>
+        <a href="#" style="color: #ddd; font-size: 22px;"><i class="fab fa-youtube"></i></a>
+      </div>
+    </div>
+  </div>
+
+  <hr style="border-color: #333; margin: 40px 0;">
+  <p style="text-align: center; color: #777;">© 2025 MotoArmor. All rights reserved.</p>
+</footer>
+
+<!-- ✅ Font Awesome CDN for social icons -->
+<script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+
+</body>
+</html>

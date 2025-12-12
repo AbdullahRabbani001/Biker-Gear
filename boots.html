@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Boots Collection</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0; padding: 40px;
+      background: #f9f9f9;
+      color: #333;
+    }
+    h1 {
+      text-align: center;
+      font-size: 40px;
+      margin-bottom: 40px;
+    }
+    .filters {
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+      margin-bottom: 30px;
+    }
+    .filters select {
+      padding: 8px 15px;
+      font-size: 16px;
+    }
+    .gallery {
+      display: flex;
+      gap: 30px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .gallery-card {
+      width: 220px;
+      background: #fff;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      cursor: pointer;
+      transition: transform 0.3s;
+    }
+    .gallery-card:hover {
+      transform: translateY(-5px);
+    }
+    .gallery-card img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+    }
+    .gallery-card .info {
+      padding: 15px;
+    }
+    .gallery-card .info h4 {
+      margin: 0 0 10px;
+      font-size: 18px;
+    }
+    .gallery-card .info p {
+      margin: 0;
+      color: #555;
+    }
+
+    .details-section {
+      display: none;
+      max-width: 800px;
+      margin: 40px auto;
+      background: #fff;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    .details-section.active {
+      display: block;
+    }
+    .details-section h3 {
+      margin-top: 0;
+    }
+    .actions {
+      text-align: center;
+      margin-top: 30px;
+    }
+    .actions button {
+      padding: 12px 35px;
+      margin: 0 10px;
+      font-size: 16px;
+      cursor: pointer;
+      background: #333;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      top: 50%; left: 50%;
+      transform: translate(-50%,-50%);
+      background: #fff;
+      padding: 30px;
+      border-radius: 8px;
+      z-index: 999;
+      box-shadow: 0 0 15px rgba(0,0,0,0.2);
+    }
+    .modal.active {
+      display: block;
+    }
+    .modal .close-btn {
+      position: absolute;
+      top: 10px; right: 10px;
+      background: red; color: #fff;
+      border: none;
+      border-radius: 50%;
+      width: 30px; height: 30px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Boots Collection</h1>
+
+  <div class="filters">
+    <label>Filter: 
+      <select>
+        <option>All</option>
+        <option>US 7</option>
+        <option>US 8</option>
+        <option>US 9</option>
+        <option>US 10</option>
+      </select>
+    </label>
+
+    <label>Sort: 
+      <select>
+        <option>Newest</option>
+        <option>Price: Low to High</option>
+        <option>Price: High to Low</option>
+      </select>
+    </label>
+  </div>
+
+  <!-- ✅ Gallery Cards -->
+  <div class="gallery">
+    <div class="gallery-card" onclick="showDetails('Racing Boots', '150', 'Premium motorcycle boots with ankle protection, waterproof design, and rugged sole for better grip.')">
+      <img src="https://via.placeholder.com/220x200?text=Boots+A" alt="">
+      <div class="info">
+        <h4>Racing Boots</h4>
+        <p>$150</p>
+      </div>
+    </div>
+    <div class="gallery-card" onclick="showDetails('Touring Boots', '170', 'Premium motorcycle boots with ankle protection, waterproof design, and rugged sole for better grip.')">
+      <img src="https://via.placeholder.com/220x200?text=Boots+B" alt="">
+      <div class="info">
+        <h4> Touring Boots </h4>
+        <p>$170</p>
+      </div>
+    </div>
+    <div class="gallery-card" onclick="showDetails(' Cruiser Boots ', '190', 'Premium motorcycle boots with ankle protection, waterproof design, and rugged sole for better grip.')">
+      <img src="https://via.placeholder.com/220x200?text=Boots+C" alt="">
+      <div class="info">
+        <h4>Cruiser Boots </h4>
+        <p>$190</p>
+      </div>
+    </div>
+    <div class="gallery-card" onclick="showDetails('Adventure Boots ', '210', 'Premium motorcycle boots with ankle protection, waterproof design, and rugged sole for better grip.')">
+      <img src="https://via.placeholder.com/220x200?text=Boots+D" alt="">
+      <div class="info">
+        <h4>Adventure Boots </h4>
+        <p>$210</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ✅ Details Section -->
+  <div id="detailsSection" class="details-section">
+    <h3 id="detailsTitle"></h3>
+    <p id="detailsDesc"></p>
+    <h4>Size Chart</h4>
+    <table border="1" cellpadding="10">
+      <tr><th>US Size</th><th>Foot Length (in)</th></tr>
+      <tr><td>7</td><td>9.6 in</td></tr>
+      <tr><td>8</td><td>9.9 in</td></tr>
+      <tr><td>9</td><td>10.2 in</td></tr>
+      <tr><td>10</td><td>10.5 in</td></tr>
+    </table>
+
+    <div class="actions">
+      <button onclick="openModal('customModal')">Customize</button>
+      <button onclick="openModal('sizeModal')">Add to Bag</button>
+    </div>
+  </div>
+
+  <!-- ✅ Customize Modal -->
+  <div id="customModal" class="modal">
+    <button class="close-btn" onclick="closeModal('customModal')">×</button>
+    <h3>Customization Form</h3>
+    <form>
+      <label>Boot Color:</label><br>
+      <select>
+        <option>Black</option>
+        <option>Brown</option>
+        <option>Tan</option>
+      </select><br><br>
+
+      <label>Material:</label><br>
+      <select>
+        <option>Leather</option>
+        <option>Synthetic</option>
+      </select><br><br>
+
+      <label>Toe Style:</label><br>
+      <select>
+        <option>Round Toe</option>
+        <option>Square Toe</option>
+        <option>Pointed Toe</option>
+      </select><br><br>
+
+      <label>Custom Engraving (optional):</label><br>
+      <input type="text" placeholder="Your text"><br><br>
+
+      <button type="button" onclick="alert('Customization Saved!'); closeModal('customModal');">Save Customization</button>
+    </form>
+  </div>
+
+  <!-- ✅ Size Modal -->
+  <div id="sizeModal" class="modal">
+    <button class="close-btn" onclick="closeModal('sizeModal')">×</button>
+    <h3>Select Size</h3>
+    <label><input type="radio" name="size"> US 7</label><br>
+    <label><input type="radio" name="size"> US 8</label><br>
+    <label><input type="radio" name="size"> US 9</label><br>
+    <label><input type="radio" name="size"> US 10</label><br>
+    <button style="margin-top:20px;" onclick="alert('Added to Bag!')">Confirm</button>
+  </div>
+
+  <script>
+    function showDetails(title, price, desc) {
+      document.getElementById('detailsTitle').textContent = title + ' - $' + price;
+      document.getElementById('detailsDesc').textContent = desc;
+      document.getElementById('detailsSection').classList.add('active');
+      window.scrollTo({ top: document.getElementById('detailsSection').offsetTop, behavior: 'smooth' });
+    }
+
+    function openModal(id) {
+      document.getElementById(id).classList.add('active');
+    }
+    function closeModal(id) {
+      document.getElementById(id).classList.remove('active');
+    }
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Jacket Collection</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0; padding: 40px;
+      background: #f9f9f9;
+      color: #333;
+    }
+    h1 {
+      text-align: center;
+      font-size: 40px;
+      margin-bottom: 40px;
+    }
+    .filters {
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+      margin-bottom: 30px;
+    }
+    .filters select {
+      padding: 8px 15px;
+      font-size: 16px;
+    }
+    .gallery {
+      display: flex;
+      gap: 30px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .gallery-card {
+      width: 220px;
+      background: #fff;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      cursor: pointer;
+      transition: transform 0.3s;
+    }
+    .gallery-card:hover {
+      transform: translateY(-5px);
+    }
+    .gallery-card img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+    }
+    .gallery-card .info {
+      padding: 15px;
+    }
+    .gallery-card .info h4 {
+      margin: 0 0 10px;
+      font-size: 18px;
+    }
+    .gallery-card .info p {
+      margin: 0;
+      color: #555;
+    }
+
+    .details-section {
+      display: none;
+      max-width: 800px;
+      margin: 40px auto;
+      background: #fff;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    .details-section.active {
+      display: block;
+    }
+    .details-section h3 {
+      margin-top: 0;
+    }
+    .actions {
+      text-align: center;
+      margin-top: 30px;
+    }
+    .actions button {
+      padding: 12px 35px;
+      margin: 0 10px;
+      font-size: 16px;
+      cursor: pointer;
+      background: #333;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      top: 50%; left: 50%;
+      transform: translate(-50%,-50%);
+      background: #fff;
+      padding: 30px;
+      border-radius: 8px;
+      z-index: 999;
+      box-shadow: 0 0 15px rgba(0,0,0,0.2);
+    }
+    .modal.active {
+      display: block;
+    }
+    .modal .close-btn {
+      position: absolute;
+      top: 10px; right: 10px;
+      background: red; color: #fff;
+      border: none;
+      border-radius: 50%;
+      width: 30px; height: 30px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Jacket Collection</h1>
+
+  <div class="filters">
+    <label>Filter: 
+      <select>
+        <option>All</option>
+        <option>Small</option>
+        <option>Medium</option>
+        <option>Large</option>
+      </select>
+    </label>
+
+    <label>Sort: 
+      <select>
+        <option>Newest</option>
+        <option>Price: Low to High</option>
+        <option>Price: High to Low</option>
+      </select>
+    </label>
+  </div>
+
+  <!-- ✅ Gallery Cards -->
+  <div class="gallery">
+    <div class="gallery-card" onclick="showDetails('Leather Jacket', '250', 'Premium leather jacket for ultimate protection and style. Ventilated lining, adjustable fit, and CE-approved armor.')">
+      <img src="https://via.placeholder.com/220x200?text=Jacket+A" alt="">
+      <div class="info">
+        <h4>Leather Jacket</h4>
+        <p>$250</p>
+      </div>
+    </div>
+    <div class="gallery-card" onclick="showDetails('Textile Jacket', '300', 'Premium leather jacket for ultimate protection and style. Ventilated lining, adjustable fit, and CE-approved armor.')">
+      <img src="https://via.placeholder.com/220x200?text=Jacket+B" alt="">
+      <div class="info">
+        <h4>Textile Jacket</h4>
+        <p>$300</p>
+      </div>
+    </div>
+    <div class="gallery-card" onclick="showDetails('Adventure Jacket', '350', 'Premium leather jacket for ultimate protection and style. Ventilated lining, adjustable fit, and CE-approved armor.')">
+      <img src="https://via.placeholder.com/220x200?text=Jacket+C" alt="">
+      <div class="info">
+        <h4>Adventure Jacket</h4>
+        <p>$350</p>
+      </div>
+    </div>
+    <div class="gallery-card" onclick="showDetails('Sports Jacket', '400', 'Premium leather jacket for ultimate protection and style. Ventilated lining, adjustable fit, and CE-approved armor.')">
+      <img src="https://via.placeholder.com/220x200?text=Jacket+D" alt="">
+      <div class="info">
+        <h4>Sports Jacket</h4>
+        <p>$400</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ✅ Details Section (opens when card clicked) -->
+  <div id="detailsSection" class="details-section">
+    <h3 id="detailsTitle"></h3>
+    <p id="detailsDesc"></p>
+    <h4>Size Chart</h4>
+    <table border="1" cellpadding="10">
+      <tr><th>Size</th><th>Chest</th></tr>
+      <tr><td>S</td><td>36-38 in</td></tr>
+      <tr><td>M</td><td>39-41 in</td></tr>
+      <tr><td>L</td><td>42-44 in</td></tr>
+    </table>
+
+    <div class="actions">
+      <button onclick="openModal('customModal')">Customize</button>
+      <button onclick="openModal('sizeModal')">Add to Bag</button>
+    </div>
+  </div>
+
+  <!-- ✅ Customize Modal -->
+ <div id="customModal" class="modal">
+  <button class="close-btn" onclick="closeModal('customModal')">×</button>
+  <h3>Customization Form</h3>
+  <form>
+    <label>Jacket Color:</label><br>
+    <select>
+      <option>Black</option>
+      <option>Brown</option>
+      <option>Grey</option>
+      <option>Red</option>
+    </select><br><br>
+
+    <label>Material:</label><br>
+    <select>
+      <option>Leather</option>
+      <option>Textile</option>
+    </select><br><br>
+
+    <label>Custom Name Tag (optional):</label><br>
+    <input type="text" placeholder="Your name or text"><br><br>
+
+    <button type="button" onclick="alert('Customization Saved!'); closeModal('customModal');">Save Customization</button>
+  </form>
+</div>
+
+  <!-- ✅ Size Modal -->
+  <div id="sizeModal" class="modal">
+    <button class="close-btn" onclick="closeModal('sizeModal')">×</button>
+    <h3>Select Size</h3>
+    <label><input type="radio" name="size"> Small</label><br>
+    <label><input type="radio" name="size"> Medium</label><br>
+    <label><input type="radio" name="size"> Large</label><br>
+    <button style="margin-top:20px;" onclick="alert('Added to Bag!')">Confirm</button>
+  </div>
+
+  <script>
+    function showDetails(title, price, desc) {
+      document.getElementById('detailsTitle').textContent = title + ' - $' + price;
+      document.getElementById('detailsDesc').textContent = desc;
+      document.getElementById('detailsSection').classList.add('active');
+      window.scrollTo({ top: document.getElementById('detailsSection').offsetTop, behavior: 'smooth' });
+    }
+
+    function openModal(id) {
+      document.getElementById(id).classList.add('active');
+    }
+    function closeModal(id) {
+      document.getElementById(id).classList.remove('active');
+    }
+  </script>
+
+</body>
+</html>

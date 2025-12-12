@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Biker Gear | Checkout Page</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0; padding: 0;
+      background: #f5f5f5;
+      color: #333;
+    }
+    header {
+      background: #111;
+      color: #fff;
+      padding: 15px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 1001;
+    }
+    header h1 { margin: 0; font-weight: 500; }
+    .cart-icon {
+      position: relative;
+      cursor: pointer;
+      font-size: 24px;
+    }
+    .cart-icon i {
+      color: #fff;
+    }
+    .cart-count {
+      position: absolute;
+      top: -8px;
+      right: -10px;
+      background: red;
+      color: #fff;
+      border-radius: 50%;
+      font-size: 12px;
+      padding: 2px 6px;
+      min-width: 20px;
+      text-align: center;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 40px auto;
+      padding: 20px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 40px;
+    }
+    .product-card {
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 20px;
+      width: calc(50% - 40px);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      transition: transform 0.2s ease;
+    }
+    .product-card:hover {
+      transform: translateY(-5px);
+    }
+    .product-card img {
+      width: 100%;
+      border-radius: 8px;
+    }
+    .product-card h2 {
+      margin: 15px 0 5px;
+    }
+    .product-card p {
+      margin: 5px 0;
+    }
+    .sizes button {
+      margin: 5px 5px 0 0;
+      padding: 8px 15px;
+      border: 1px solid #333;
+      background: #fff;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+    .sizes button.active {
+      background: #333;
+      color: #fff;
+    }
+    .error {
+      color: red;
+      display: none;
+      margin-top: 8px;
+    }
+    .add-btn {
+      margin-top: 15px;
+      padding: 12px 25px;
+      background: #d32f2f;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      cursor: not-allowed;
+      opacity: 0.5;
+    }
+    .add-btn.enabled {
+      cursor: pointer;
+      opacity: 1;
+    }
+
+    /* Cart Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 2000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background: rgba(0,0,0,0.6);
+    }
+    .modal-content {
+      background: #fff;
+      margin: 80px auto;
+      padding: 20px;
+      border-radius: 8px;
+      width: 90%;
+      max-width: 600px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+      position: relative;
+      animation: fadeIn 0.3s ease;
+    }
+    .modal-content h3 {
+      margin-top: 0;
+      border-bottom: 2px solid #d32f2f;
+      padding-bottom: 10px;
+      color: #d32f2f;
+    }
+    .cart-item {
+      display: flex;
+      gap: 15px;
+      margin: 15px 0;
+      border-bottom: 1px solid #ddd;
+      padding-bottom: 10px;
+    }
+    .cart-item img {
+      width: 60px;
+      border-radius: 5px;
+    }
+    .cart-item-details {
+      flex: 1;
+    }
+    .remove {
+      color: red;
+      cursor: pointer;
+    }
+    .modal-btns {
+      margin-top: 20px;
+      text-align: right;
+    }
+    .modal-btns button {
+      padding: 10px 20px;
+      margin-left: 10px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .close-btn {
+      background: #555;
+      color: #fff;
+    }
+    .checkout-btn {
+      background: #d32f2f;
+      color: #fff;
+    }
+
+    /* Checkout Page */
+    .checkout-page {
+      display: none;
+      max-width: 800px;
+      margin: 40px auto;
+      background: #fff;
+      padding: 40px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    .checkout-page.show {
+      display: block;
+    }
+    .checkout-page h2 { margin-top: 0; }
+    .field {
+      margin-bottom: 15px;
+    }
+    .field label {
+      display: block;
+      margin-bottom: 5px;
+    }
+    .field input {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #aaa;
+      border-radius: 4px;
+    }
+    .payment-options {
+      margin: 20px 0;
+    }
+    .payment-options label {
+      display: block;
+      margin: 10px 0;
+      cursor: pointer;
+    }
+    .payment-options i {
+      margin-right: 8px;
+    }
+    .place-order {
+      background: #d32f2f;
+      color: #fff;
+      padding: 15px 30px;
+      border: none;
+      border-radius: 4px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    @keyframes fadeIn {
+      from { transform: translateY(-20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    .add-btn:disabled:hover::after {
+  content: "Please select size";
+  display: block;
+  color: red;
+  margin-top: 5px;
+  font-size: 14px;
+}
+ .site-logo {
+  height: 95px;   /* bigger logo */
+  width: auto;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+  </style>
+</head>
+<body>
+
+  <header>
+    <a href="Final Project(Biker Gear).html">
+      <img src="logo.png" alt="MotoArmor Logo" class="site-logo">
+    </a>
+  </div>
+   
+    <div class="cart-icon" id="cartIcon">
+      <i class="fas fa-shopping-cart"></i>
+      <span class="cart-count" id="cartCount">0</span>
+    </div>
+  </header>
+<script>
+  // ✅ CART ICON click and open the modal
+document.getElementById('cartIcon').addEventListener('click', () => {
+  renderCart(); // ensure it shows current cart data
+  cartModal.style.display = 'block';
+});
+</script>
+
+  <div class="container">
+    <!-- Product Card 1 -->
+    <div class="product-card" data-id="1">
+      <img src="https://img.freepik.com/free-photo/handsome-man-biker-travelling-mototrcycle_1303-22146.jpg" alt="Jacket" height="50%">
+      <h2>Biker Leather Jacket</h2>
+      <p>PKR 14,999 <del>PKR 18,000</del> (-20%)</p>
+      <div class="sizes">
+        <strong>Size:</strong><br>
+        <button data-size="S">S</button>
+        <button data-size="M">M</button>
+        <button data-size="L">L</button>
+        <button data-size="XL">XL</button>
+      </div>
+      <div class="error">Please select size</div>
+      <button class="add-btn"><i class="fas fa-bag-shopping"></i> Add to Bag</button>
+    </div>
+
+    <!-- Product Card 2 -->
+    <div class="product-card" data-id="2">
+      <img src="https://img.freepik.com/free-photo/motorcycle-driver-wears-leather-gloves_346278-27.jpg" alt="Gloves" height="50%">
+      <h2>Biker Riding Gloves</h2>
+      <p>PKR 3,999 <del>PKR 5,000</del> (-20%)</p>
+      <div class="sizes">
+        <strong>Size:</strong><br>
+        <button data-size="M">M</button>
+        <button data-size="L">L</button>
+        <button data-size="XL">XL</button>
+      </div>
+      <div class="error">Please select size</div>
+      <button class="add-btn"><i class="fas fa-bag-shopping"></i> Add to Bag</button>
+    </div>
+  </div>
+
+  <!-- Cart Modal -->
+  <div class="modal" id="cartModal">
+    <div class="modal-content">
+      <h3>🛒 Shopping Summary</h3>
+      <div id="cartContent"></div>
+      <div class="modal-btns">
+        <button class="close-btn" id="closeModal">Close</button>
+        <button class="checkout-btn" id="proceedCheckout">Proceed to Checkout</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Checkout Page -->
+ <!-- ✅ Inside your checkout-page div: -->
+<div class="checkout-page" id="checkoutPage">
+  <h2>Checkout 🇵🇰 PKR</h2>
+  <div class="field">
+    <label>Phone *</label>
+    <input id="phone" type="tel" placeholder="+92 3001234567">
+  </div>
+  <div class="field">
+    <label>First Name *</label>
+    <input id="fname" type="text" placeholder="Enter your first name">
+  </div>
+  <div class="field">
+    <label>Last Name *</label>
+    <input id="lname" type="text" placeholder="Enter your last name">
+  </div>
+  <div class="field">
+    <label>Email *</label>
+    <input id="email" type="email" placeholder="yourname@example.com">
+  </div>
+  <div class="field">
+    <label>Address *</label>
+    <input id="address" type="text" placeholder="House No., Street, Area">
+  </div>
+  <div class="field">
+    <label>City *</label>
+    <input id="city" type="text" placeholder="Your city name">
+  </div>
+  <div class="field">
+    <label>Zip *</label>
+    <input id="zip" type="text" placeholder="Postal / Zip code">
+  </div>
+
+  <h3>Payment Method</h3>
+  <div class="payment-options">
+    <label><input type="radio" name="payment" value="COD" checked> <i class="fas fa-truck"></i> Cash on Delivery</label>
+    <label><input type="radio" name="payment" value="Card"> <i class="fas fa-credit-card"></i> Credit/Debit Card</label>
+    <label><input type="radio" name="payment" value="JazzCash"> <i class="fas fa-mobile-alt"></i> JazzCash</label>
+    <label><input type="radio" name="payment" value="EasyPaisa"> <i class="fas fa-wallet"></i> EasyPaisa</label>
+  </div>
+
+  <button class="place-order" id="placeOrder">Place Order</button>
+
+  <script>
+ placeOrder.addEventListener('click', () => {
+  const order = {
+    phone: document.getElementById('phone').value,
+    fname: document.getElementById('fname').value,
+    lname: document.getElementById('lname').value,
+    email: document.getElementById('email').value,
+    address: document.getElementById('address').value,
+    city: document.getElementById('city').value,
+    zip: document.getElementById('zip').value,
+    payment: document.querySelector('input[name="payment"]:checked').value,
+    items: cartItems
+  };
+
+  // ✅ Cart Summary Text
+  let itemsText = order.items.map((item, i) => 
+    `Item ${i+1}: ${item.title}, Size: ${item.size}, Price: ${item.price}`
+  ).join('%0A');
+
+  let fullMessage = `
+    New Order Details:%0A
+    Name: ${order.fname} ${order.lname}%0A
+    Phone: ${order.phone}%0A
+    Email: ${order.email}%0A
+    Address: ${order.address}, ${order.city}, ${order.zip}%0A
+    Payment Method: ${order.payment}%0A
+    ${itemsText}
+  `.trim();
+
+  // ✅ WhatsApp Link (same tab)
+  let whatsappLink = `https://wa.me/923001234567?text=${encodeURIComponent(fullMessage)}`;
+  window.location.href = whatsappLink;
+
+  // ✅ (Optional) Email fallback:
+   setTimeout(() => {
+     let emailLink = `mailto:youremail@example.com?subject=New%20Order&body=${encodeURIComponent(fullMessage)}`;
+     window.location.href = emailLink;
+   }, 3000);
+
+  console.log('Order Placed:', order);
+});
+</script>
+</div>
+
+
+  <script>
+    const productCards = document.querySelectorAll('.product-card');
+    const cartCount = document.getElementById('cartCount');
+    const cartModal = document.getElementById('cartModal');
+    const cartContent = document.getElementById('cartContent');
+    const closeModal = document.getElementById('closeModal');
+    const proceedCheckout = document.getElementById('proceedCheckout');
+    const checkoutPage = document.getElementById('checkoutPage');
+    const placeOrder = document.getElementById('placeOrder');
+    let cartItems = [];
+
+    productCards.forEach(card => {
+      let selectedSize = '';
+      const sizeBtns = card.querySelectorAll('.sizes button');
+      const error = card.querySelector('.error');
+      const addBtn = card.querySelector('.add-btn');
+      const title = card.querySelector('h2').innerText;
+      const price = card.querySelector('p').innerText.split(' ')[1];
+      const img = card.querySelector('img').src;
+
+      sizeBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          sizeBtns.forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          selectedSize = btn.getAttribute('data-size');
+          addBtn.classList.add('enabled');
+          addBtn.disabled = false;
+          error.style.display = 'none';
+        });
+      });
+
+      addBtn.addEventListener('click', () => {
+        if (!selectedSize) {
+          error.style.display = 'block';
+        } else {
+          cartItems.push({title, price, size: selectedSize, img});
+          updateCart();
+          cartModal.style.display = 'block';
+        }
+      });
+    });
+
+    function updateCart() {
+      cartCount.textContent = cartItems.length;
+      renderCart();
+    }
+function renderCart() {
+  cartContent.innerHTML = '';
+  let subtotal = 0;
+
+  cartItems.forEach((item, index) => {
+    let price = parseInt(item.price.replace(/[^\d]/g, ''));
+    subtotal += price;
+
+    cartContent.innerHTML += `
+      <div class="cart-item">
+        <img src="${item.img}">
+        <div class="cart-item-details">
+          <strong>${item.title}</strong><br>
+          Size: ${item.size}<br>
+          ${item.price}
+        </div>
+        <i class="fas fa-trash remove" data-index="${index}"></i>
+      </div>
+    `;
+  });
+
+  // ✅ Show subtotal & shipping only if there are items
+  if (cartItems.length > 0) {
+    let shipping = 250;
+    let total = subtotal + shipping;
+
+    cartContent.innerHTML += `
+      <div style="text-align: right; margin-top: 20px; border-top: 1px solid #ccc; padding-top: 10px;">
+        <p><strong>Subtotal:</strong> PKR ${subtotal.toLocaleString()}</p>
+        <p><strong>Shipping:</strong> PKR ${shipping}</p>
+        <p><strong>Total:</strong> PKR ${total.toLocaleString()}</p>
+      </div>
+    `;
+  }
+}
+
+
+    cartContent.addEventListener('click', e => {
+      if (e.target.classList.contains('remove')) {
+        const index = e.target.getAttribute('data-index');
+        cartItems.splice(index, 1);
+        updateCart();
+      }
+    });
+
+    closeModal.addEventListener('click', () => {
+      cartModal.style.display = 'none';
+    });
+
+    proceedCheckout.addEventListener('click', () => {
+      cartModal.style.display = 'none';
+      checkoutPage.classList.add('show');
+      checkoutPage.scrollIntoView({ behavior: "smooth" });
+    });
+
+    placeOrder.addEventListener('click', () => {
+      const order = {
+        phone: document.getElementById('phone').value,
+        fname: document.getElementById('fname').value,
+        lname: document.getElementById('lname').value,
+        email: document.getElementById('email').value,
+        address: document.getElementById('address').value,
+        city: document.getElementById('city').value,
+        zip: document.getElementById('zip').value,
+        payment: document.querySelector('input[name="payment"]:checked').value,
+        items: cartItems
+      };
+      console.log('Order Placed:', order);
+      alert('Order placed successfully!');
+    });
+  </script>
+
+</body>
+</html>
